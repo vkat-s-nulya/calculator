@@ -1,0 +1,8 @@
+Checks: >
+    -*,
+    bugprone-*,
+    misc-*,
+    -misc-include-cleaner,
+    -misc-use-anonymous-namespace,
+    readability-*,
+    -readability-magic-numbers
