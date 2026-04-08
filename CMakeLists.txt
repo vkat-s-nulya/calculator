@@ -14,6 +14,7 @@ add_executable(calculator
     src/main.cpp
     src/runner.cpp
     src/parser.cpp
+    src/checker.cpp
     src/calculator.cpp
     src/printer.cpp
 )
