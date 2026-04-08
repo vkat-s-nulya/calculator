@@ -22,5 +22,8 @@ struct Context
     Operation operation;
     int64_t result;
     mathlib::Error error;
+    int has_a;
+    int has_b;
+    int has_op;
 };
 }

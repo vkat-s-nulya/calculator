@@ -64,12 +64,15 @@ void parse(int argc, char *argv[], Context *ctx)
         {
         case 'a':
             parse_arg(optarg, &ctx->a);
+            ctx->has_a = 1;
             break;
         case 'b':
             parse_arg(optarg, &ctx->b);
+            ctx->has_b = 1;
             break;
         case 'o':
             parse_operation(optarg, &ctx->operation);
+            ctx->has_op = 1;
             break;
         case 'h':
             printf("Usage: calculator -a NUM -b NUM -o OPERATION\n");
