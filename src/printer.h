@@ -3,5 +3,10 @@
 
 namespace calculator
 {
-void print(Context *ctx);
+class Printer
+{
+public:
+    void print(const Context& ctx);
+    void printError(const char* message);
+};
 }

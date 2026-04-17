@@ -1,8 +1,16 @@
 #pragma once
 
+#include <string>
 #include "types.h"
 
 namespace calculator
 {
-void parse(int argc, char *argv[], Context *ctx);
+class Parser
+{
+public:
+    Context parse(const std::string& input);
+
+private:
+    Operation parseOperation(const std::string& operation);
+};
 }

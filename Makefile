@@ -8,6 +8,9 @@ format:
 tidy:
 	cmake --build build --target tidy
 
+test:
+	cd build && ctest --output-on-failure
+
 install:
 	sudo cmake --build build --target install
 

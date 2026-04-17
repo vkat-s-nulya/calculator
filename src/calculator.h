@@ -3,5 +3,9 @@
 
 namespace calculator
 {
-void calculate(Context *ctx);
+class Calculator
+{
+public:
+    void calculate(Context& ctx);
+};
 }

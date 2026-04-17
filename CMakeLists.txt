@@ -9,6 +9,27 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(mathlib)
 
+FetchContent_Declare(
+    json
+    GIT_REPOSITORY https://github.com/nlohmann/json.git
+    GIT_TAG v3.11.3
+)
+FetchContent_MakeAvailable(json)
+
+FetchContent_Declare(
+    spdlog
+    GIT_REPOSITORY https://github.com/gabime/spdlog.git
+    GIT_TAG v1.15.0
+)
+FetchContent_MakeAvailable(spdlog)
+
+FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG v1.15.2
+)
+FetchContent_MakeAvailable(googletest)
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(calculator
     src/main.cpp
@@ -17,12 +38,36 @@ add_executable(calculator
     src/checker.cpp
     src/calculator.cpp
     src/printer.cpp
+    src/logger.cpp
 )
 
-target_link_libraries(calculator PRIVATE mathlib)
+target_link_libraries(calculator PRIVATE mathlib nlohmann_json::nlohmann_json spdlog::spdlog)
 install(TARGETS calculator DESTINATION bin)
 
-file(GLOB_RECURSE ALL_SOURCES src/*.cpp src/*.h)
+enable_testing()
+
+add_executable(tests
+    tests/test_parser.cpp
+    tests/test_checker.cpp
+    tests/test_calculator.cpp
+    src/parser.cpp
+    src/checker.cpp
+    src/calculator.cpp
+    src/logger.cpp
+)
+
+target_include_directories(tests PRIVATE src)
+target_link_libraries(tests PRIVATE
+    mathlib
+    nlohmann_json::nlohmann_json
+    spdlog::spdlog
+    GTest::gtest_main
+)
+
+include(GoogleTest)
+gtest_discover_tests(tests)
+
+file(GLOB_RECURSE ALL_SOURCES src/*.cpp src/*.h tests/*.cpp)
 
 add_custom_target(format
     COMMAND clang-format -i ${ALL_SOURCES}
