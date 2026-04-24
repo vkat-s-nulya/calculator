@@ -3,5 +3,9 @@
 
 namespace calculator
 {
-    void check(Context* ctx);
+class Checker
+{
+public:
+    void check(const Context& ctx);
+};
 }

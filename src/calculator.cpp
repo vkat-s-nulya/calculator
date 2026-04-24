@@ -1,32 +1,50 @@
 #include "calculator.h"
+#include "exceptions.h"
+#include "logger.h"
 #include <mathlib/mathlib.h>
 
-void calculator::calculate(Context *ctx)
+namespace calculator
 {
-    switch (ctx->operation)
+void Calculator::calculate(Context& ctx)
+{
+    Logger::instance().debug("calculating");
+
+    mathlib::Error err = mathlib::OK;
+
+    switch (ctx.operation)
     {
     case Operation::ADD:
-        ctx->error = mathlib::add(ctx->a, ctx->b, &ctx->result);
+        err = mathlib::add(ctx.a, ctx.b, &ctx.result);
         break;
     case Operation::SUB:
-        ctx->error = mathlib::sub(ctx->a, ctx->b, &ctx->result);
+        err = mathlib::sub(ctx.a, ctx.b, &ctx.result);
         break;
     case Operation::MUL:
-        ctx->error = mathlib::mul(ctx->a, ctx->b, &ctx->result);
+        err = mathlib::mul(ctx.a, ctx.b, &ctx.result);
         break;
     case Operation::DIV:
-        ctx->error = mathlib::div(ctx->a, ctx->b, &ctx->result);
+        err = mathlib::div(ctx.a, ctx.b, &ctx.result);
         break;
     case Operation::POW:
-        ctx->error = mathlib::pow(ctx->a, ctx->b, &ctx->result);
+        err = mathlib::pow(ctx.a, ctx.b, &ctx.result);
         break;
     case Operation::FAC:
-        ctx->error = mathlib::fac(ctx->a, &ctx->result);
-        break;
-    case Operation::UNKNOWN:
-        ctx->error = mathlib::Error::UNSUPPORTED_OPERATION;
-        break;
-    default:
+        err = mathlib::fac(ctx.a, &ctx.result);
         break;
     }
+
+    switch (err)
+    {
+    case mathlib::OK:
+        return;
+    case mathlib::OVERFLOW:
+        throw CalculationError("overflow");
+    case mathlib::DIVISION_BY_ZERO:
+        throw CalculationError("division by zero");
+    case mathlib::INVALID_ARGUMENT:
+        throw CalculationError("invalid argument");
+    default:
+        throw CalculationError("unknown calculation error");
+    }
+}
 }

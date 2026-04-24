@@ -1,45 +1,24 @@
 #include "checker.h"
-#include <stdio.h>
+#include "exceptions.h"
+#include "logger.h"
 
-void calculator::check(Context* ctx)
+namespace calculator
 {
-    if (!ctx->has_op)
+void Checker::check(const Context& ctx)
+{
+    Logger::instance().debug("validating input");
+
+    if (ctx.operation == Operation::DIV && ctx.b == 0)
     {
-        printf("Error: operation is required (-o)\n");
-        ctx->error = mathlib::INVALID_ARGUMENT;
-        return;
+        throw ValidationError("division by zero");
     }
-    if (ctx->operation == Operation::UNKNOWN)
+    if (ctx.operation == Operation::POW && ctx.b < 0)
     {
-        printf("Error: unknown operation\n");
-        ctx->error = mathlib::INVALID_ARGUMENT;
-        return;
+        throw ValidationError("negative exponent is not supported");
     }
-    if (!ctx->has_a)
+    if (ctx.operation == Operation::FAC && ctx.a < 0)
     {
-        printf("Error: first number is required (-a)\n");
-        ctx->error = mathlib::INVALID_ARGUMENT;
-        return;
+        throw ValidationError("factorial of negative number is not defined");
     }
-    if (ctx->operation != Operation::FAC && !ctx->has_b)
-    {
-        printf("Error: second number is required (-b)\n");
-        ctx->error = mathlib::INVALID_ARGUMENT;
-        return;
-    }
-    if (ctx->operation == Operation::DIV && ctx->b == 0)
-    {
-        ctx->error = mathlib::DIVISION_BY_ZERO;
-        return;
-    }
-    if (ctx->operation == Operation::POW && ctx->b < 0)
-    {
-        ctx->error = mathlib::INVALID_ARGUMENT;
-        return;
-    }
-    if (ctx->operation == Operation::FAC && ctx->a < 0)
-    {
-        ctx->error = mathlib::INVALID_ARGUMENT;
-        return;
-    }
+}
 }

@@ -1,19 +1,32 @@
 #include "runner.h"
-#include "calculator.h"
-#include "checker.h"
-#include "parser.h"
-#include "printer.h"
+#include "exceptions.h"
+#include "logger.h"
+#include <iostream>
 
-void calculator::run(int argc, char *argv[])
+namespace calculator
 {
-    Context ctx = {};
-    parse(argc, argv, &ctx);
-    check(&ctx);
-    if (ctx.error != mathlib::OK)
+
+int Runner::run(int argc, char* argv[])
+{
+    if (argc < 2)
     {
-        print(&ctx);
-        return;
+        m_printer.printError("JSON input is required");
+        std::cerr << "Usage: calculator '{\"a\": NUM, \"b\": NUM, \"op\": \"add|sub|mul|div|pow|fac\"}'" << std::endl;
+        return 1;
     }
-    calculate(&ctx);
-    print(&ctx);
+
+    try
+    {
+        Context ctx = m_parser.parse(argv[1]);
+        m_checker.check(ctx);
+        m_calculator.calculate(ctx);
+        m_printer.print(ctx);
+        return 0;
+    }
+    catch (const CalculatorException& e)
+    {
+        m_printer.printError(e.what());
+        return 1;
+    }
+}
 }

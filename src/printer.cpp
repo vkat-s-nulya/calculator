@@ -1,31 +1,18 @@
 #include "printer.h"
-#include <inttypes.h>
-#include <stdio.h>
+#include "logger.h"
+#include <iostream>
 
-void calculator::print(Context *ctx)
+namespace calculator
 {
-    if (ctx->error == mathlib::Error::OK)
-    {
-        printf("Result: %" PRId64 "\n", ctx->result);
-        return;
-    }
+void Printer::print(const Context& ctx)
+{
+    Logger::instance().debug("printing result");
+    std::cout << "Result: " << ctx.result << std::endl;
+}
 
-    switch (ctx->error)
-    {
-    case mathlib::Error::OVERFLOW:
-        printf("Error: overflow\n");
-        break;
-    case mathlib::Error::INVALID_ARGUMENT:
-        printf("Error: invalid argument\n");
-        break;
-    case mathlib::Error::DIVISION_BY_ZERO:
-        printf("Error: division by zero\n");
-        break;
-    case mathlib::Error::UNSUPPORTED_OPERATION:
-        printf("Error: operation not supported\n");
-        break;
-    default:
-        printf("Error: unknown error\n");
-        break;
-    }
+void Printer::printError(const char* message)
+{
+    Logger::instance().error(message);
+    std::cerr << "Error: " << message << std::endl;
+}
 }

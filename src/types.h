@@ -4,9 +4,8 @@
 
 namespace calculator
 {
-enum Operation
+enum class Operation
 {
-    UNKNOWN = -1,
     ADD = 0,
     SUB = 1,
     MUL = 2,
@@ -21,9 +20,5 @@ struct Context
     int64_t b;
     Operation operation;
     int64_t result;
-    mathlib::Error error;
-    int has_a;
-    int has_b;
-    int has_op;
 };
 }
