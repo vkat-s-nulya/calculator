@@ -28,4 +28,4 @@ void Logger::info(const char* message)  { m_logger->logger->info(message); }
 void Logger::error(const char* message) { m_logger->logger->error(message); }
 void Logger::debug(const char* message) { m_logger->logger->debug(message); }
 
-} // namespace calculator
+}

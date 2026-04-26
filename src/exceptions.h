@@ -26,4 +26,10 @@ class CalculationError : public CalculatorException
   public:
     using CalculatorException::CalculatorException;
 };
+
+class DatabaseError : public CalculatorException
+{
+public:
+    using CalculatorException::CalculatorException;
+};
 }
