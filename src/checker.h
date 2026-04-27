@@ -11,8 +11,8 @@ public:
 
     Checker(const Checker&) = default;
     Checker& operator=(const Checker&) = default;
-    Checker(Checker&&) = default;
-    Checker& operator=(Checker&&) = default;
+    Checker(Checker&&) noexcept = default;
+    Checker& operator=(Checker&&) noexcept = default;
 
     void check(const Context& ctx);
 };

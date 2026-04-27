@@ -13,8 +13,8 @@ public:
 
     Parser(const Parser&) = default;
     Parser& operator=(const Parser&) = default;
-    Parser(Parser&&) = default;
-    Parser& operator=(Parser&&) = default;
+    Parser(Parser&&) noexcept = default;
+    Parser& operator=(Parser&&) noexcept = default;
 
     Context parse(const std::string& input);
 };

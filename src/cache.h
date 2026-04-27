@@ -15,8 +15,8 @@ public:
 
     Cache(const Cache&) = default;
     Cache& operator=(const Cache&) = default;
-    Cache(Cache&&) = default;
-    Cache& operator=(Cache&&) = default;
+    Cache(Cache&&) noexcept = default;
+    Cache& operator=(Cache&&) noexcept = default;
 
     std::optional<Context> find(const Context& ctx) const;
     void insert(const Context& ctx);
