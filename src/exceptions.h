@@ -11,19 +11,25 @@ public:
 
 class ParseError : public CalculatorException
 {
-public: 
+public:
     using CalculatorException::CalculatorException;
 };
 
 class ValidationError : public CalculatorException
 {
-  public:
+public:
     using CalculatorException::CalculatorException;
 };
 
 class CalculationError : public CalculatorException
 {
-  public:
+public:
     using CalculatorException::CalculatorException;
 };
-}
+
+class DatabaseError : public CalculatorException
+{
+public:
+    using CalculatorException::CalculatorException;
+};
+} // namespace calculator

@@ -1,5 +1,5 @@
-#include "parser.h"
 #include "exceptions.h"
+#include "parser.h"
 #include <gtest/gtest.h>
 
 using namespace calculator;
@@ -7,7 +7,7 @@ using namespace calculator;
 TEST(ParserTest, ParsesSimpleAddition)
 {
     Parser parser;
-    Context ctx = parser.parse(R"({"a": 10, "b": 3, "op": "add"})");
+    const Context ctx = parser.parse(R"({"a": 10, "b": 3, "op": "add"})");
 
     EXPECT_EQ(ctx.a, 10);
     EXPECT_EQ(ctx.b, 3);
@@ -17,7 +17,7 @@ TEST(ParserTest, ParsesSimpleAddition)
 TEST(ParserTest, ParsesFactorialWithoutB)
 {
     Parser parser;
-    Context ctx = parser.parse(R"({"a": 5, "op": "fac"})");
+    const Context ctx = parser.parse(R"({"a": 5, "op": "fac"})");
 
     EXPECT_EQ(ctx.a, 5);
     EXPECT_EQ(ctx.operation, Operation::FAC);
@@ -27,12 +27,18 @@ TEST(ParserTest, ParsesAllOperations)
 {
     Parser parser;
 
-    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "add"})").operation, Operation::ADD);
-    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "sub"})").operation, Operation::SUB);
-    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "mul"})").operation, Operation::MUL);
-    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "div"})").operation, Operation::DIV);
-    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "pow"})").operation, Operation::POW);
-    EXPECT_EQ(parser.parse(R"({"a": 1, "op": "fac"})").operation, Operation::FAC);
+    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "add"})").operation,
+              Operation::ADD);
+    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "sub"})").operation,
+              Operation::SUB);
+    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "mul"})").operation,
+              Operation::MUL);
+    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "div"})").operation,
+              Operation::DIV);
+    EXPECT_EQ(parser.parse(R"({"a": 1, "b": 1, "op": "pow"})").operation,
+              Operation::POW);
+    EXPECT_EQ(parser.parse(R"({"a": 1, "op": "fac"})").operation,
+              Operation::FAC);
 }
 
 TEST(ParserTest, ThrowsOnInvalidJson)
@@ -68,7 +74,7 @@ TEST(ParserTest, ThrowsOnUnknownOperation)
 TEST(ParserTest, HandlesNegativeNumbers)
 {
     Parser parser;
-    Context ctx = parser.parse(R"({"a": -10, "b": -3, "op": "add"})");
+    const Context ctx = parser.parse(R"({"a": -10, "b": -3, "op": "add"})");
 
     EXPECT_EQ(ctx.a, -10);
     EXPECT_EQ(ctx.b, -3);

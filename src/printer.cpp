@@ -15,4 +15,4 @@ void Printer::printError(const char* message)
     Logger::instance().error(message);
     std::cerr << "Error: " << message << std::endl;
 }
-}
+} // namespace calculator

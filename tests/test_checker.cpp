@@ -23,7 +23,8 @@ TEST(CheckerTest, ValidAdditionPasses)
 TEST(CheckerTest, DivisionByZeroThrows)
 {
     Checker checker;
-    EXPECT_THROW(checker.check(makeCtx(10, 0, Operation::DIV)), ValidationError);
+    EXPECT_THROW(checker.check(makeCtx(10, 0, Operation::DIV)),
+                 ValidationError);
 }
 
 TEST(CheckerTest, DivisionByNonZeroPasses)
@@ -35,7 +36,8 @@ TEST(CheckerTest, DivisionByNonZeroPasses)
 TEST(CheckerTest, NegativeExponentThrows)
 {
     Checker checker;
-    EXPECT_THROW(checker.check(makeCtx(2, -3, Operation::POW)), ValidationError);
+    EXPECT_THROW(checker.check(makeCtx(2, -3, Operation::POW)),
+                 ValidationError);
 }
 
 TEST(CheckerTest, PositiveExponentPasses)
@@ -47,7 +49,8 @@ TEST(CheckerTest, PositiveExponentPasses)
 TEST(CheckerTest, NegativeFactorialThrows)
 {
     Checker checker;
-    EXPECT_THROW(checker.check(makeCtx(-5, 0, Operation::FAC)), ValidationError);
+    EXPECT_THROW(checker.check(makeCtx(-5, 0, Operation::FAC)),
+                 ValidationError);
 }
 
 TEST(CheckerTest, NonNegativeFactorialPasses)

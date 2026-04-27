@@ -5,6 +5,7 @@
 
 namespace calculator
 {
+
 Context Parser::parse(const std::string& input)
 {
     Logger::instance().debug("parsing JSON input");
@@ -28,9 +29,15 @@ Context Parser::parse(const std::string& input)
         throw ParseError("missing field: a");
     }
 
+    const auto op = fromString(j["op"].get<std::string>());
+    if (!op.has_value())
+    {
+        throw ParseError("unknown operation: " + j["op"].get<std::string>());
+    }
+
     Context ctx;
     ctx.a = j["a"].get<int64_t>();
-    ctx.operation = parseOperation(j["op"].get<std::string>());
+    ctx.operation = op.value();
 
     if (ctx.operation != Operation::FAC)
     {
@@ -48,15 +55,4 @@ Context Parser::parse(const std::string& input)
     return ctx;
 }
 
-Operation Parser::parseOperation(const std::string& op)
-{
-    if (op == "add") return Operation::ADD;
-    if (op == "sub") return Operation::SUB;
-    if (op == "mul") return Operation::MUL;
-    if (op == "div") return Operation::DIV;
-    if (op == "pow") return Operation::POW;
-    if (op == "fac") return Operation::FAC;
-
-    throw ParseError("unknown operation: " + op);
-}
-}
+} // namespace calculator

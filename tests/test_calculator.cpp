@@ -1,7 +1,7 @@
 #include "calculator.h"
 #include "exceptions.h"
-#include <gtest/gtest.h>
 #include <cstdint>
+#include <gtest/gtest.h>
 #include <limits>
 
 using namespace calculator;
@@ -67,7 +67,8 @@ TEST(CalculatorTest, Factorial)
 TEST(CalculatorTest, OverflowOnLargeMultiplication)
 {
     Calculator calc;
-    Context ctx = makeCtx(std::numeric_limits<int64_t>::max(), 2, Operation::MUL);
+    Context ctx =
+        makeCtx(std::numeric_limits<int64_t>::max(), 2, Operation::MUL);
     EXPECT_THROW(calc.calculate(ctx), CalculationError);
 }
 
