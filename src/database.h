@@ -8,15 +8,6 @@
 namespace calculator
 {
 
-struct CalculationRecord
-{
-    int64_t a;
-    int64_t b;
-    Operation operation;
-    int64_t result;
-    int status;
-};
-
 class PostgresDatabase
 {
 public:
@@ -25,9 +16,11 @@ public:
 
     PostgresDatabase(const PostgresDatabase&) = delete;
     PostgresDatabase& operator=(const PostgresDatabase&) = delete;
+    PostgresDatabase(PostgresDatabase&&) = delete;
+    PostgresDatabase& operator=(PostgresDatabase&&) = delete;
 
-    void save(const CalculationRecord& record);
-    std::vector<CalculationRecord> loadAll();
+    void save(const Context& ctx);
+    std::vector<Context> loadAll();
 
 private:
     struct conn_deleter
@@ -42,9 +35,10 @@ private:
 
     using result_ptr = std::unique_ptr<PGresult, result_deleter>;
 
-    result_ptr execute(const std::string& query, const std::vector<std::string>& params);
+    result_ptr execute(const std::string& query,
+                       const std::vector<std::string>& params);
 
     std::unique_ptr<PGconn, conn_deleter> m_conn;
 };
 
-}
+} // namespace calculator

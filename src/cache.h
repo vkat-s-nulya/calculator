@@ -7,23 +7,25 @@
 namespace calculator
 {
 
-struct CalculationResult
-{
-    int64_t result;
-    int status;
-};
-
 class Cache
 {
 public:
-    static std::string buildKey(int64_t a, int64_t b, Operation op);
+    Cache() = default;
+    ~Cache() = default;
 
-    std::optional<CalculationResult> find(const std::string& key) const;
-    void insert(const std::string& key, const CalculationResult& value);
+    Cache(const Cache&) = default;
+    Cache& operator=(const Cache&) = default;
+    Cache(Cache&&) = default;
+    Cache& operator=(Cache&&) = default;
+
+    std::optional<Context> find(const Context& ctx) const;
+    void insert(const Context& ctx);
     size_t size() const;
 
 private:
-    std::unordered_map<std::string, CalculationResult> m_data;
+    static std::string buildKey(int64_t a, int64_t b, Operation op);
+
+    std::unordered_map<std::string, Context> m_data;
 };
 
-}
+} // namespace calculator

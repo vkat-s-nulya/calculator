@@ -1,16 +1,21 @@
 #pragma once
 
-#include <string>
 #include "types.h"
+#include <string>
 
 namespace calculator
 {
 class Parser
 {
 public:
-    Context parse(const std::string& input);
+    Parser() = default;
+    ~Parser() = default;
 
-private:
-    Operation parseOperation(const std::string& operation);
+    Parser(const Parser&) = default;
+    Parser& operator=(const Parser&) = default;
+    Parser(Parser&&) = default;
+    Parser& operator=(Parser&&) = default;
+
+    Context parse(const std::string& input);
 };
-}
+} // namespace calculator

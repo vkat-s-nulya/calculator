@@ -14,12 +14,18 @@ class Runner
 {
 public:
     explicit Runner(const std::string& conninfo);
+    ~Runner() = default;
+
+    Runner(const Runner&) = delete;
+    Runner& operator=(const Runner&) = delete;
+    Runner(Runner&&) = delete;
+    Runner& operator=(Runner&&) = delete;
 
     int run(int argc, char* argv[]);
 
 private:
     void warmupCache();
-    void saveError(const Context& ctx, const std::string& key);
+    void saveError(const Context& ctx);
 
     Parser m_parser;
     Checker m_checker;
@@ -29,4 +35,4 @@ private:
     Cache m_cache;
 };
 
-}
+} // namespace calculator

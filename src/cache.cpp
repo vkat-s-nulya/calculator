@@ -4,25 +4,11 @@
 namespace calculator
 {
 
-static const char* opToString(Operation op)
-{
-    switch (op)
-    {
-    case Operation::ADD: return "+";
-    case Operation::SUB: return "-";
-    case Operation::MUL: return "*";
-    case Operation::DIV: return "/";
-    case Operation::POW: return "^";
-    case Operation::FAC: return "!";
-    }
-    return "?";
-}
-
 std::string Cache::buildKey(int64_t a, int64_t b, Operation op)
 {
     if (op == Operation::FAC)
     {
-        return std::to_string(a) + "!";
+        return std::to_string(a) + toString(op);
     }
 
     if (op == Operation::ADD || op == Operation::MUL)
@@ -33,12 +19,13 @@ std::string Cache::buildKey(int64_t a, int64_t b, Operation op)
         }
     }
 
-    return std::to_string(a) + opToString(op) + std::to_string(b);
+    return std::to_string(a) + toString(op) + std::to_string(b);
 }
 
-std::optional<CalculationResult> Cache::find(const std::string& key) const
+std::optional<Context> Cache::find(const Context& ctx) const
 {
-    auto it = m_data.find(key);
+    const std::string key = buildKey(ctx.a, ctx.b, ctx.operation);
+    const auto it = m_data.find(key);
     if (it == m_data.end())
     {
         return std::nullopt;
@@ -46,14 +33,12 @@ std::optional<CalculationResult> Cache::find(const std::string& key) const
     return it->second;
 }
 
-void Cache::insert(const std::string& key, const CalculationResult& value)
+void Cache::insert(const Context& ctx)
 {
-    m_data[key] = value;
+    const std::string key = buildKey(ctx.a, ctx.b, ctx.operation);
+    m_data[key] = ctx;
 }
 
-size_t Cache::size() const
-{
-    return m_data.size();
-}
+size_t Cache::size() const { return m_data.size(); }
 
-}
+} // namespace calculator

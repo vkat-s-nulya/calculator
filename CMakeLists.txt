@@ -47,6 +47,7 @@ add_executable(calculator
     src/logger.cpp
     src/database.cpp
     src/cache.cpp
+    src/types.cpp
 )
 
 target_link_libraries(calculator PRIVATE mathlib nlohmann_json::nlohmann_json spdlog::spdlog PostgreSQL::PostgreSQL)
@@ -63,6 +64,7 @@ add_executable(tests
     src/checker.cpp
     src/calculator.cpp
     src/logger.cpp
+    src/types.cpp
 )
 
 target_include_directories(tests PRIVATE src)
