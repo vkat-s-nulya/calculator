@@ -4,7 +4,6 @@
 #include "checker.h"
 #include "database.h"
 #include "parser.h"
-#include "printer.h"
 #include <string>
 
 namespace calculator
@@ -21,7 +20,7 @@ public:
     Runner(Runner&&) = delete;
     Runner& operator=(Runner&&) = delete;
 
-    int run(int argc, char* argv[]);
+    std::string process(const std::string& request);
 
 private:
     void warmupCache();
@@ -30,7 +29,6 @@ private:
     Parser m_parser;
     Checker m_checker;
     Calculator m_calculator;
-    Printer m_printer;
     PostgresDatabase m_database;
     Cache m_cache;
 };

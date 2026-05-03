@@ -35,6 +35,8 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 find_package(PostgreSQL REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system)
+find_package(Threads REQUIRED)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(calculator
@@ -43,14 +45,22 @@ add_executable(calculator
     src/parser.cpp
     src/checker.cpp
     src/calculator.cpp
-    src/printer.cpp
     src/logger.cpp
     src/database.cpp
     src/cache.cpp
     src/types.cpp
+    src/server.cpp
+    src/session.cpp
 )
 
-target_link_libraries(calculator PRIVATE mathlib nlohmann_json::nlohmann_json spdlog::spdlog PostgreSQL::PostgreSQL)
+target_link_libraries(calculator PRIVATE
+    mathlib
+    nlohmann_json::nlohmann_json
+    spdlog::spdlog
+    PostgreSQL::PostgreSQL
+    Boost::system
+    Threads::Threads
+)
 install(TARGETS calculator DESTINATION bin)
 
 set(MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1")

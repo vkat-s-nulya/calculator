@@ -1,7 +1,7 @@
 #include "runner.h"
 #include "exceptions.h"
 #include "logger.h"
-#include <iostream>
+#include <nlohmann/json.hpp>
 
 namespace calculator
 {
@@ -19,37 +19,28 @@ void Runner::warmupCache()
         m_cache.insert(ctx);
     }
     Logger::instance().info(
-        ("cache warmed up with " + std::to_string(m_cache.size()) + " records")
-            .c_str());
+        ("cache warmed up with " + std::to_string(m_cache.size()) + " records").c_str());
 }
 
-int Runner::run(int argc, char* argv[])
+std::string Runner::process(const std::string& request)
 {
-    if (argc < 2)
-    {
-        m_printer.printError("JSON input is required");
-        std::cerr << "Usage: calculator '{\"a\": NUM, \"b\": NUM, \"op\": "
-                     "\"add|sub|mul|div|pow|fac\"}'"
-                  << std::endl;
-        return 1;
-    }
+    nlohmann::json response;
 
     try
     {
-        Context ctx = m_parser.parse(argv[1]);
+        Context ctx = m_parser.parse(request);
 
         const auto cached = m_cache.find(ctx);
         if (cached.has_value())
         {
             Logger::instance().info("cache hit");
+            response["result"] = cached->result;
+            response["status"] = cached->status;
             if (cached->status != 0)
             {
-                throw CalculationError("cached error (status " +
-                                       std::to_string(cached->status) + ")");
+                response["error"] = "cached error";
             }
-            ctx.result = cached->result;
-            m_printer.print(ctx);
-            return 0;
+            return response.dump() + "\n";
         }
 
         Logger::instance().info("cache miss");
@@ -69,14 +60,18 @@ int Runner::run(int argc, char* argv[])
         m_database.save(ctx);
         m_cache.insert(ctx);
 
-        m_printer.print(ctx);
-        return 0;
+        response["result"] = ctx.result;
+        response["status"] = 0;
     }
     catch (const CalculatorException& e)
     {
-        m_printer.printError(e.what());
-        return 1;
+        Logger::instance().error(e.what());
+        response["result"] = 0;
+        response["status"] = 1;
+        response["error"] = e.what();
     }
+
+    return response.dump() + "\n";
 }
 
 void Runner::saveError(const Context& ctx)
