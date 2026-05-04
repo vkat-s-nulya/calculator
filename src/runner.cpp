@@ -19,7 +19,8 @@ void Runner::warmupCache()
         m_cache.insert(ctx);
     }
     Logger::instance().info(
-        ("cache warmed up with " + std::to_string(m_cache.size()) + " records").c_str());
+        ("cache warmed up with " + std::to_string(m_cache.size()) + " records")
+            .c_str());
 }
 
 std::string Runner::process(const std::string& request)

@@ -28,7 +28,8 @@ protected:
         s_runner = std::make_unique<calculator::Runner>(conninfo);
 
         s_io = std::make_unique<asio::io_context>();
-        s_server = std::make_unique<calculator::Server>(*s_io, kTestPort, *s_runner);
+        s_server =
+            std::make_unique<calculator::Server>(*s_io, kTestPort, *s_runner);
         s_server->start();
 
         s_thread = std::thread([]() { s_io->run(); });
@@ -40,8 +41,8 @@ protected:
             {
                 asio::io_context probe;
                 tcp::socket sock(probe);
-                sock.connect(
-                    tcp::endpoint(asio::ip::make_address("127.0.0.1"), kTestPort));
+                sock.connect(tcp::endpoint(asio::ip::make_address("127.0.0.1"),
+                                           kTestPort));
                 return;
             }
             catch (...)
@@ -71,7 +72,8 @@ protected:
     {
         asio::io_context io;
         tcp::socket sock(io);
-        sock.connect(tcp::endpoint(asio::ip::make_address("127.0.0.1"), kTestPort));
+        sock.connect(
+            tcp::endpoint(asio::ip::make_address("127.0.0.1"), kTestPort));
         asio::write(sock, asio::buffer(request + "\n"));
 
         asio::streambuf buf;
@@ -158,7 +160,9 @@ TEST_F(ServerTest, MultipleRequestsInSameSession)
 
     asio::streambuf buf;
 
-    asio::write(sock, asio::buffer(std::string(R"({"a": 1, "b": 2, "op": "add"})") + "\n"));
+    asio::write(
+        sock,
+        asio::buffer(std::string(R"({"a": 1, "b": 2, "op": "add"})") + "\n"));
     asio::read_until(sock, buf, '\n');
     {
         std::istream stream(&buf);
@@ -167,7 +171,9 @@ TEST_F(ServerTest, MultipleRequestsInSameSession)
         EXPECT_NE(response.find("\"result\":3"), std::string::npos) << response;
     }
 
-    asio::write(sock, asio::buffer(std::string(R"({"a": 8, "b": 4, "op": "sub"})") + "\n"));
+    asio::write(
+        sock,
+        asio::buffer(std::string(R"({"a": 8, "b": 4, "op": "sub"})") + "\n"));
     asio::read_until(sock, buf, '\n');
     {
         std::istream stream(&buf);

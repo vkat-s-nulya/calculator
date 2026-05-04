@@ -23,7 +23,9 @@ int main()
 
         const char* portEnv = std::getenv("CALC_PORT");
         const unsigned short port =
-            (portEnv != nullptr) ? static_cast<unsigned short>(std::stoi(portEnv)) : 9000;
+            (portEnv != nullptr)
+                ? static_cast<unsigned short>(std::stoi(portEnv))
+                : 9000;
 
         calculator::Runner runner(conninfo);
 
@@ -36,7 +38,8 @@ int main()
         int signum = 0;
         sigwait(&sigset, &signum);
         calculator::Logger::instance().info(
-            ("received signal " + std::to_string(signum) + ", shutting down").c_str());
+            ("received signal " + std::to_string(signum) + ", shutting down")
+                .c_str());
 
         io.stop();
         worker.join();
