@@ -17,6 +17,12 @@ test:
 test-valgrind:
 	cd build && ctest -T memcheck --output-on-failure
 
+tsan:
+	sudo sysctl -w vm.mmap_rnd_bits=28
+	cmake -B build-tsan -DENABLE_TSAN=ON
+	cmake --build build-tsan
+	cd build-tsan && ctest --output-on-failure
+
 valgrind:
 	valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1 \
 		./build/calculator '{"a": 10, "b": 3, "op": "add"}'
