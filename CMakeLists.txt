@@ -68,6 +68,8 @@ target_link_libraries(calculator PRIVATE
     Threads::Threads
 )
 install(TARGETS calculator DESTINATION bin)
+install(FILES systemd/calculator.service DESTINATION /lib/systemd/system)
+install(FILES config/calculator.env.example DESTINATION /etc/calculator)
 
 set(MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1")
 include(CTest)
