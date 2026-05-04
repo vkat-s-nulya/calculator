@@ -76,11 +76,17 @@ add_executable(tests
     tests/test_parser.cpp
     tests/test_checker.cpp
     tests/test_calculator.cpp
+    tests/test_server.cpp
     src/parser.cpp
     src/checker.cpp
     src/calculator.cpp
     src/logger.cpp
     src/types.cpp
+    src/runner.cpp
+    src/database.cpp
+    src/cache.cpp
+    src/server.cpp
+    src/session.cpp
 )
 
 target_include_directories(tests PRIVATE src)
@@ -88,6 +94,9 @@ target_link_libraries(tests PRIVATE
     mathlib
     nlohmann_json::nlohmann_json
     spdlog::spdlog
+    PostgreSQL::PostgreSQL
+    Boost::system
+    Threads::Threads
     GTest::gtest_main
 )
 
