@@ -37,17 +37,13 @@ protected:
         const auto deadline = std::chrono::steady_clock::now() + kTimeout;
         while (std::chrono::steady_clock::now() < deadline)
         {
-            try
+            asio::io_context probe;
+            tcp::socket sock(probe);
+            boost::system::error_code ec;
+            sock.connect(tcp::endpoint(asio::ip::make_address("127.0.0.1"), kTestPort), ec);
+            if (!ec)
             {
-                asio::io_context probe;
-                tcp::socket sock(probe);
-                sock.connect(tcp::endpoint(asio::ip::make_address("127.0.0.1"),
-                                           kTestPort));
                 return;
-            }
-            catch (...)
-            {
-                // not ready yet, retry
             }
         }
         FAIL() << "server failed to start within timeout";
