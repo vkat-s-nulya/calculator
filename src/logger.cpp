@@ -1,6 +1,6 @@
 #include "logger.h"
-#include <spdlog/spdlog.h>
 #include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/spdlog.h>
 
 namespace calculator
 {
@@ -24,7 +24,7 @@ Logger& Logger::instance()
     return logger;
 }
 
-void Logger::info(const char* message)  { m_logger->logger->info(message); }
+void Logger::info(const char* message) { m_logger->logger->info(message); }
 void Logger::error(const char* message) { m_logger->logger->error(message); }
 void Logger::debug(const char* message) { m_logger->logger->debug(message); }
 

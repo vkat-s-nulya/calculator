@@ -47,4 +47,4 @@ void Calculator::calculate(Context& ctx)
         throw CalculationError("unknown calculation error");
     }
 }
-}
+} // namespace calculator

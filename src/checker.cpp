@@ -21,4 +21,4 @@ void Checker::check(const Context& ctx)
         throw ValidationError("factorial of negative number is not defined");
     }
 }
-}
+} // namespace calculator
