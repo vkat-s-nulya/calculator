@@ -5,6 +5,12 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
+option(ENABLE_TSAN "Enable ThreadSanitizer" OFF)
+if(ENABLE_TSAN)
+    add_compile_options(-fsanitize=thread -g)
+    add_link_options(-fsanitize=thread)
+endif()
+
 include(FetchContent)
 FetchContent_Declare(
     mathlib
@@ -32,9 +38,12 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/google/googletest.git
     GIT_TAG v1.15.2
 )
+set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 find_package(PostgreSQL REQUIRED)
+find_package(Boost REQUIRED COMPONENTS system)
+find_package(Threads REQUIRED)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_executable(calculator
@@ -43,15 +52,36 @@ add_executable(calculator
     src/parser.cpp
     src/checker.cpp
     src/calculator.cpp
-    src/printer.cpp
     src/logger.cpp
     src/database.cpp
     src/cache.cpp
     src/types.cpp
+    src/server.cpp
+    src/session.cpp
 )
 
-target_link_libraries(calculator PRIVATE mathlib nlohmann_json::nlohmann_json spdlog::spdlog PostgreSQL::PostgreSQL)
+target_link_libraries(calculator PRIVATE
+    mathlib
+    nlohmann_json::nlohmann_json
+    spdlog::spdlog
+    PostgreSQL::PostgreSQL
+    Boost::system
+    Threads::Threads
+)
 install(TARGETS calculator DESTINATION bin)
+install(FILES systemd/calculator.service DESTINATION /lib/systemd/system)
+install(FILES config/calculator.env.example DESTINATION /etc/calculator)
+
+set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_NAME "calculator-service")
+set(CPACK_PACKAGE_VERSION "1.0.0")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Network calculator service with caching and persistence")
+set(CPACK_PACKAGE_VENDOR "vkat-s-nulya")
+set(CPACK_DEBIAN_PACKAGE_MAINTAINER "vkat-s-nulya <noreply@example.com>")
+set(CPACK_DEBIAN_PACKAGE_SECTION "utils")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+set(CPACK_PACKAGING_INSTALL_PREFIX "/usr/local")
+include(CPack)
 
 set(MEMORYCHECK_COMMAND_OPTIONS "--leak-check=full --show-leak-kinds=all --track-origins=yes --error-exitcode=1")
 include(CTest)
@@ -60,11 +90,17 @@ add_executable(tests
     tests/test_parser.cpp
     tests/test_checker.cpp
     tests/test_calculator.cpp
+    tests/test_server.cpp
     src/parser.cpp
     src/checker.cpp
     src/calculator.cpp
     src/logger.cpp
     src/types.cpp
+    src/runner.cpp
+    src/database.cpp
+    src/cache.cpp
+    src/server.cpp
+    src/session.cpp
 )
 
 target_include_directories(tests PRIVATE src)
@@ -72,6 +108,9 @@ target_link_libraries(tests PRIVATE
     mathlib
     nlohmann_json::nlohmann_json
     spdlog::spdlog
+    PostgreSQL::PostgreSQL
+    Boost::system
+    Threads::Threads
     GTest::gtest_main
 )
 

@@ -1,0 +1,14 @@
+[Unit]
+Description=Calculator network service
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/calculator
+EnvironmentFile=/etc/calculator/calculator.env
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
