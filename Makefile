@@ -35,5 +35,8 @@ perf:
 install:
 	sudo cmake --build build --target install
 
+package:
+	cd build && cpack -G DEB
+
 clean:
 	rm -rf build
